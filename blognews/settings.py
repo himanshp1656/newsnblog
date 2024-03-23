@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-he63r$(fun=eb#vj2kqjbe!0b_u5s!5nmac70a09z6_z%@w^u!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['newsnblog.azurewebsites.net']
+
 
 
 # Application definition
@@ -39,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
      'rest_framework',
+     'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -128,3 +131,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL='/login'
+CORS_ALLOWED_ORIGINS = [
+    'https://newsnblog.azurewebsites.net',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True

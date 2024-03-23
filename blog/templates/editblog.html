@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Alert</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.0/classic/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin-top: 20px;
+        }
+        .ck-editor__editable {
+            min-height: 300px; /* Adjust as needed */
+        }
+        button[type="submit"] {
+            display: block;
+            width: 100px; /* Reduced button width */
+            margin: 20px auto; /* Center the button */
+            padding: 8px 16px; /* Reduced button padding */
+            background-color: #f74242;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px; /* Reduced font size */
+        }
+        button[type="submit"] i {
+            margin-right: 5px; /* Add space between icon and text */
+        }
+        button[type="submit"]:hover {
+            background-color: #ff5e5e; /* Lighter color on hover */
+        }
+        .card {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .card p {
+            margin: 5px 0;
+        }
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .edit-form textarea {
+            width: 100%;
+            min-height: 150px; /* Adjust the height as needed */
+            padding: 10px; /* Add padding */
+            border: 1px solid #ccc; /* Add border */
+            border-radius: 5px; /* Add border radius */
+        }
+        label {
+            font-weight: bold; /* Make labels bold */
+            margin-bottom: 5px; /* Add space below labels */
+            display: block; /* Ensure labels are displayed in block */
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px; /* Add padding */
+            border: 1px solid #ccc; /* Add border */
+            border-radius: 5px; /* Add border radius */
+        }
+        .edit-btn, .delete-btn {
+            background-color: #f74242;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .edit-btn:hover, .delete-btn:hover {
+            background-color: #ff5e5e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #f74242;"><i class="fas fa-blog"></i> Create Blogs</h1>
+        <form action="/createblog/" method="post">
+            {% csrf_token %}
+            <label for="topic">Topic:</label>
+            <input id="topic" name="topic" type="text" placeholder="Enter topic here" required>
+            <textarea id="blog_value" name="blog_value" placeholder="Enter your blog content here">{{ request.POST.blog_value }}</textarea>
+            <button type="submit"><i class="fas fa-check-circle"></i> Submit</button>
+        </form>
+    </div>
+
+    <!-- Display User Blogs -->
+    <div class="container">
+        <h2>Edit or Delete your Blogs</h2>
+        {% for blog in user_blogs %}
+        <div class="card">
+            <h3>{{ blog.topic }}</h3>
+            <p>{{ blog.content | safe }}</p>
+            <p>{{ blog.date_created }}</p>
+            <button class="edit-btn" onclick="editBlog({{ blog.id }})">Edit</button>
+            <a  href="/deleteblog/{{ blog.id }}"><button class="delete-btn" >delete</button></a>
+            <form id="edit-form-{{ blog.id }}" class="edit-form" action="/createblog/" method="post">
+                {% csrf_token %}
+                <label for="edited-topic">Topic:</label>
+                <input type="hidden" name="blog_id" value="{{ blog.id }}">
+                <input id="edited-topic" name="topic" type="text" value="{{ blog.topic }}">
+                <textarea name="blog_value" class="edited-content">{{ blog.content }}</textarea>
+                <button type="submit">Save</button>
+            </form>
+            
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Ensure CKEditor Initialization is after CKEditor script -->
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#blog_value' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+
+        function editBlog(blogId) {
+            var card = document.getElementById('edit-form-' + blogId);
+            card.style.display = 'block';
+            var content = document.querySelector('#edit-form-' + blogId + ' .edited-content');
+            ClassicEditor
+                .create(content)
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    </script>
+</body>
+</html>

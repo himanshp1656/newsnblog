@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Page</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Custom styles here */
+    .signup-container {
+      max-width: 400px;
+      margin: 0 auto;
+      margin-top: 50px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .signup-container h2 {
+      text-align: center;
+    }
+    .error-message {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="signup-container">
+    <h2>Sign Up</h2>
+    <form method="post" action="/signup/" onsubmit="return validatePassword()">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="username"><i class="fas fa-user"></i> Username</label>
+        <input type="text" class="form-control" id="username" name='username' placeholder="Enter your username" required>
+      </div>
+      <div class="form-group">
+        <label for="email"><i class="fas fa-envelope"></i> Email address</label>
+        <input type="email" class="form-control" id="email" name='email' placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label for="password"><i class="fas fa-lock"></i> Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-user-plus"></i> Sign Up</button>
+      <span class="error-message">{{ error }}</span> 
+    </form>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  function validatePassword() {
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirmPassword").value;
+
+    // Password should contain at least one special character, one digit, and be 8 characters long
+    var regex = /^(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
+
+    if (!regex.test(password)) {
+      alert("Password should contain at least one special character, one digit, and be 8 characters long.");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return false;
+    }
+
+    return true;
+  }
+</script>
+
+</body>
+</html>

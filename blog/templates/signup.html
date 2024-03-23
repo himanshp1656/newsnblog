@@ -32,6 +32,7 @@
   <div class="signup-container">
     <h2>Sign Up</h2>
     <form method="post" action="/signup/" onsubmit="return validatePassword()">
+      
       {% csrf_token %}
       <div class="form-group">
         <label for="username"><i class="fas fa-user"></i> Username</label>

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-he63r$(fun=eb#vj2kqjbe!0b_u5s!5nmac70a09z6_z%@w^u!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['newsnblog.azurewebsites.net']
+ALLOWED_HOSTS = ['newsnblog.azurewebsites.net','*']
 
 
 
@@ -136,3 +136,5 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = ['https://newsnblog.azurewebsites.net']

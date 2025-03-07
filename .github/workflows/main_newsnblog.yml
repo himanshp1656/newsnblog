@@ -1,18 +1,18 @@
-name: Json parse test
+name: Print Name Workflow
 
 on:
   workflow_dispatch:
     inputs:
-      parameters_json:
-        type: string
+      name:
+        description: "Enter your name"
         required: true
+        type: string
+        default: "User"
 
 jobs:
-  build_and_deploy:
-    name: Json parse test
+  print_name:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Parse json input
-        id: json
-        run: |
-          echo ${{ fromJson(github.event.inputs.parameters_json).targetPlatform }}
+      - name: Print only the name
+        run: echo "${{ github.event.inputs.name }}"

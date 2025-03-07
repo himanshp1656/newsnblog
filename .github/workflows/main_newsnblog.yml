@@ -6,7 +6,6 @@ on:
       name:
         description: "Enter the full Docker image path"
         required: true
-        type: string
         default: "asia-south1-docker.pkg.dev/swarna-380521/docker-staging/hello-app:1.0"
 
 jobs:

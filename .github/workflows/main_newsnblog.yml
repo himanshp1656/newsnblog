@@ -26,7 +26,7 @@ jobs:
 
       - name: Authenticate to Google Cloud (User Account)
         run: |
-          echo "ya29.a0AeXRPp77TIbJzb4cE0ctartgZM9VjsEk0NWs5RsNu672pftodDqEpI0WArvVztcLNN4OTOk4xjpepIL1yfwSJSw4m7Ks-FvSxLSp67SM102525jqg0dQrIszZjNlNyliXMEcQcgJuCbuBGrd4Ome1jgXWaycf-c4mp71IhVgV3pmYQaCgYKAXoSARESFQHGX2MiGOHhO-sK8zd5IgPNguK4dw0181" | gcloud auth activate-refresh-token shushankbhatia@gmail.com
+          echo "ya29.a0AeXRPp5mJjW05vn3eScdwQEXZ29jFcsX2gBDEvt5X9mVvC35nOWg9sekJOnUkJN3EKh1kn-E1lRVNSQRqDnjNLrDjutVwRq7oE6gC5lko4sX7Q6cBMXA6AMpvpaZ-xERsYXmW3WIOswZwCJZrYaprr6-PVhEsdm3Dv0yFiPSqFSx9AaCgYKAVcSARESFQHGX2Mi8jHzBw1hCrAjuOCPKDjlJg0181" | gcloud auth activate-refresh-token shushankbhatia@gmail.com
 
       - name: Configure Docker Authentication
         run: gcloud auth configure-docker asia-south1-docker.pkg.dev

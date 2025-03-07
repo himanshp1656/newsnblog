@@ -1,8 +1,13 @@
-name: Print Tag and Fetch Docker Image
+name: Print Name and Fetch Docker Image
 
 on:
   workflow_dispatch:
     inputs:
+      name:
+        description: "Enter the Docker image name"
+        required: true
+        type: string
+        default: "newsnblog"
       tag:
         description: "Enter the Docker image tag"
         required: true
@@ -10,14 +15,16 @@ on:
         default: "latest"
 
 jobs:
-  print_tag:
+  fetch_docker_image:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print only the tag
-        run: echo "${{ github.event.inputs.tag }}"
+      - name: Print Docker Image Name and Tag
+        run: |
+          echo "${{ github.event.inputs.name }}"
+          echo "${{ github.event.inputs.tag }}"
 
       - name: Pull Docker Image
         run: |
-          echo "Pulling Docker image with tag: ${{ github.event.inputs.tag }}"
-          docker pull ghcr.io/himanshp1656/newsnblog:${{ github.event.inputs.tag }}
+          echo "Pulling Docker image: ghcr.io/himanshp1656/${{ github.event.inputs.name }}:${{ github.event.inputs.tag }}"
+          docker pull ghcr.io/himanshp1656/${{ github.event.inputs.name }}:${{ github.event.inputs.tag }}

@@ -1,4 +1,4 @@
-name: Print Name and Pull Docker Image
+name: Print Name and Pull Docker Image from GAR
 
 on:
   workflow_dispatch:
@@ -6,6 +6,7 @@ on:
       name:
         description: "Enter the full Docker image path"
         required: true
+        type: string
         default: "asia-south1-docker.pkg.dev/swarna-380521/docker-staging/hello-app:1.0"
 
 jobs:
@@ -16,9 +17,16 @@ jobs:
       - name: Print only the name
         run: echo "${{ github.event.inputs.name }}"
 
-      - name: Authenticate with Google Artifact Registry
+      - name: Install Google Cloud SDK
         run: |
-          echo "${{ secrets.GCR_JSON_KEY }}" | docker login -u _json_key --password-stdin https://asia-south1-docker.pkg.dev
+          sudo apt-get update
+          sudo apt-get install -y google-cloud-sdk
+
+      - name: Authenticate to Google Cloud
+        run: |
+          echo "${{ secrets.GCR_JSON_KEY }}" > key.json
+          gcloud auth activate-service-account --key-file=key.json
+          gcloud auth configure-docker asia-south1-docker.pkg.dev
 
       - name: Pull Docker Image from GAR
         run: |

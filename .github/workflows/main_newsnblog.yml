@@ -1,34 +1,35 @@
-name: Print Name and Pull Docker Image from GAR
+name: Push Docker Image to Google Artifact Registry
 
 on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: "Enter the full Docker image path"
-        required: true
-        type: string
-        default: "asia-south1-docker.pkg.dev/swarna-380521/docker-staging/hello-app:1.0"
+  push:
+    branches:
+      - main  # Trigger on pushes to main branch
 
 jobs:
-  print_name:
+  push-image:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print only the name
-        run: echo "${{ github.event.inputs.name }}"
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Install Google Cloud SDK
+      - name: Authenticate to Google Cloud (User Account)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y google-cloud-sdk
+          echo "ya29.a0AeXRPp4RfliMVAjHOU-quBJYMzjUeMPtcYIm5fY-EVYfHdMg6BQwlFZ62M3zQ4sKpnEYmaPgjxiuSVqVaIPnefv6_gRcoqaFRERFrke8PvOL1KGtMZ5ZR6pJgzumUE3Fzikv9fd7deaXV9rZKz5mtaqk3E8H7BSIaep9cYV77KLC4waCgYKAdESARESFQHGX2MiX7O9aZWF2pbfJy8KE_bvsQ0181" | gcloud auth activate-refresh-token shushankbhatia@gmail.com
 
-      - name: Authenticate to Google Cloud
-        run: |
-          echo "${{ secrets.GCR_JSON_KEY }}" > key.json
-          gcloud auth activate-service-account --key-file=key.json
-          gcloud auth configure-docker asia-south1-docker.pkg.dev
+      - name: Configure Docker Authentication
+        run: gcloud auth configure-docker asia-south1-docker.pkg.dev
 
-      - name: Pull Docker Image from GAR
+      - name: Pull Image from Source Artifact Registry
         run: |
-          echo "Pulling Docker image: ${{ github.event.inputs.name }}"
-          docker pull ${{ github.event.inputs.name }}
+          docker pull asia-south1-docker.pkg.dev/swarna-380521/docker-staging/hello-app:1.0
+
+
+      - name: Tag Image for Destination Artifact Registry
+        run: |
+          docker tag asia-south1-docker.pkg.dev/swarna-380521/docker-staging/hello-app:1.0 \
+                     asia-south1-docker.pkg.dev/swarna-380521/cloud-run-source-deploy/hello-app:1.0
+
+      - name: Push Docker Image
+        run: |
+          docker push asia-south1-docker.pkg.dev/swarna-380521/cloud-run-source-deploy/hello-app:1.0

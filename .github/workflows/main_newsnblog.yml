@@ -34,7 +34,7 @@ jobs:
 
       - name: Authenticate to Google Cloud (User Account)
         run: |
-          echo "ya29.a0AeXRPp77TIbJzb4cE0ctartgZM9VjsEk0NWs5RsNu672pftodDqEpI0WArvVztcLNN4OTOk4xjpepIL1yfwSJSw4m7Ks-FvSxLSp67SM102525jqg0dQrIszZjNlNyliXMEcQcgJuCbuBGrd4Ome1jgXWaycf-c4mp71IhVgV3pmYQaCgYKAXoSARESFQHGX2MiGOHhO-sK8zd5IgPNguK4dw0181" | gcloud auth activate-refresh-token shushankbhatia@gmail.com
+          echo "ya29.a0AeXRPp6pn1goxypoUW-kPsABPksLrU-9-Lh6Y88fxBwQprTfVjpBSGLj9jujbYzIo8kxWAxfinNb4gVjJGneQtg1GNgtPMv8R04wqMvOuID5YIHFvcf-wKMYaylAMtQfizJ-4qBJCPUmCXv3RnGLJodCMavuuM9eSnr9IfKCcBtjlgaCgYKAQMSARESFQHGX2Mi9hiW6LhPkNvZ4771Tvg-SQ0181" | gcloud auth activate-refresh-token shushankbhatia@gmail.com
 
       - name: Configure Docker Authentication
         run: gcloud auth configure-docker asia-south1-docker.pkg.dev
@@ -61,7 +61,7 @@ jobs:
       - name: Download JSON Data from Google Cloud Storage
         run: |
           FORMATTED_NAME=$(echo "${{ inputs.name }}" | sed 's/\//_/g')
-          gsutil cp gs://${FORMATTED_NAME}.json /tmp/your-file.json
+          gsutil cp gs://stagingb/${FORMATTED_NAME}.json /tmp/your-file.json
 
       - name: Parse JSON and Insert into PostgreSQL
         run: |

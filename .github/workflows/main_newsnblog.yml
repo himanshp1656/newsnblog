@@ -20,15 +20,7 @@ jobs:
           sudo apt-get install -y postgresql postgresql-contrib jq
 
 
-      - name: Upsert
-        run: |
-          PGPASSWORD="AVNS_AqVTKx8DS17lyKhyrDg" psql -h atlan-hack-001-a-atlan-hack-001.d.aivencloud.com -p 11418 -U avnadmin -d defaultdb -c "
-          INSERT INTO image_store (image_name, tags) 
-          VALUES ('analytics_dashboard.png', ARRAY['bi', 'sql', 'dashboard']) 
-          ON CONFLICT (image_name) 
-          DO UPDATE SET tags = array_cat(image_store.tags, EXCLUDED.tags);
-          "
-
+      
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -65,15 +57,20 @@ jobs:
 
       - name: Parse JSON and Insert into PostgreSQL
         run: |
-          # Parse JSON and insert into PostgreSQL
-          jq -c '.[]' /tmp/your-file.json | while read i; do
-            name=$(echo $i | jq -r '.name')
-            value=$(echo $i | jq -r '.value')
+            JSON_FILE="/tmp/your-file.json"
+            ID=$(jq -r '.id' "$JSON_FILE")
+            TAGS=$(jq -r '.tags | @csv' "$JSON_FILE")
+
+            # Convert CSV to PostgreSQL array format
+            TAGS_PG_ARRAY="{$TAGS}"
+
             PGPASSWORD="AVNS_AqVTKx8DS17lyKhyrDg" psql -h atlan-hack-001-a-atlan-hack-001.d.aivencloud.com -p 11418 -U avnadmin -d defaultdb -c "
-              INSERT INTO your_table (name, value) 
-              VALUES ('$name', '$value');
+              INSERT INTO image_store (image_name, tags) 
+              VALUES ('$ID', '$TAGS_PG_ARRAY')
+              ON CONFLICT (image_name) 
+              DO UPDATE SET tags = array_cat(image_store.tags, EXCLUDED.tags);
             "
-          done
+
       - name: Tag Image for Destination Artifact Registry
         run: |
           docker tag ${{ github.event.inputs.name }} \

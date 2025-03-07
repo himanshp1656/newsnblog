@@ -1,9 +1,13 @@
 name: Push Docker Image to Google Artifact Registry
 
 on:
-  push:
-    branches:
-      - main  # Trigger on pushes to main branch
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Enter your name"
+        required: true
+        type: string
+        default: "User"
 
 jobs:
   push-image:
@@ -22,12 +26,12 @@ jobs:
 
       - name: Pull Image from Source Artifact Registry
         run: |
-          docker pull asia-south1-docker.pkg.dev/swarna-380521/docker-staging/hello-app:1.0
+          docker pull ${{ github.event.inputs.name }}
 
 
       - name: Tag Image for Destination Artifact Registry
         run: |
-          docker tag asia-south1-docker.pkg.dev/swarna-380521/docker-staging/hello-app:1.0 \
+          docker tag ${{ github.event.inputs.name }} \
                      asia-south1-docker.pkg.dev/swarna-380521/cloud-run-source-deploy/hello-app:1.0
 
       - name: Push Docker Image

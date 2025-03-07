@@ -15,4 +15,4 @@ jobs:
 
     steps:
       - name: Print only the name
-        run: echo "${{ github.event.inputs.name }}"
+        run: echo "${{ github.event.inputs }}"
